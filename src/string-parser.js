@@ -1,98 +1,107 @@
-/* eslint-disable */
-import React, {Component} from 'react';
-import Linkify from 'react-linkify';
-
-const StringParser = React.createClass({
-    getInitialState: function() {
-        return {
-        isMore: false,
-        text: []
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: !0 });
+var _react = require("react"),
+  _react2 = _interopRequireDefault(_react),
+  _reactLinkify = require("react-linkify"),
+  _reactLinkify2 = _interopRequireDefault(_reactLinkify);
+function _interopRequireDefault(a) {
+  return a && a.__esModule ? a : { default: a };
+}
+var StringParser = _react2.default.createClass({
+  displayName: "StringParser",
+  getInitialState: function getInitialState() {
+    return { isMore: !1, text: [] };
+  },
+  componentDidMount: function componentDidMount() {
+    this.createTextArr(this.props);
+  },
+  componentWillReceiveProps: function componentWillReceiveProps(a) {
+    a.text != this.props.text && (this.createTextArr(a), console.log("hahaha"));
+  },
+  createTextArr: function createTextArr(a) {
+    var b = [],
+      c = [];
+    a.text && (b = a.text.split("\n"));
+    for (var d = 0; d < b.length; d++) {
+      c.push({ text: b[d], newLine: !0 });
+      var e = b[d],
+        f = [];
+      for (f.push(e); 200 < e.length; ) {
+        e = f[0].substr(0, f[0].length / 2);
+        for (var h, g = 0; g < f.length; g += 2) {
+          for (h = f[g].length / 2; " " != f[g].charAt(h) && h < f[g].length; )
+            h++;
+          f.splice(g + 1, 0, f[g].substr(h)), f.splice(g, 1, f[g].substr(0, h));
         }
-    },
-    componentDidMount: function(){
-        this.createTextArr(this.props);
-    },
-    componentWillReceiveProps: function(nextProp) {
-        if(nextProp.text != this.props.text) {
-            this.createTextArr(nextProp);
-            console.log('hahaha');
-        }
-    },
-    createTextArr: function(nextProp) {
-        let text = [];
-        let result = [];
-        if(nextProp.text) text = nextProp.text.split("\n");
-        for (let i=0; i< text.length; i++) {
-            result.push({
-                text: text[i],
-                newLine: true
-            });
-            // let wordList = text[i].split(' ');
-            let tempText = text[i];
-            let tempArr = [];
-            tempArr.push(tempText);
-            while(tempText.length > 200) {
-                tempText = tempArr[0].substr(0,tempArr[0].length/2);
-                for (let j = 0; j<tempArr.length; j=j+2) {
-                    let splitIndex = tempArr[j].length/2;
-                    while(tempArr[j].charAt(splitIndex) != ' ' && splitIndex < tempArr[j].length) {
-                        splitIndex++;
-                    }
-                    tempArr.splice(j+1,0,tempArr[j].substr(splitIndex));
-                    tempArr.splice(j,1,tempArr[j].substr(0,splitIndex));
-                }
-            }
-            text.splice(i, 1, tempArr[0]);
-            result.splice(i,1,{
-                text: tempArr[0],
-                newLine: tempArr.length == 1? true : false
-            });
-            for (let j = 1; j<tempArr.length; j++) {
-                text.splice(i+j, 0, tempArr[j]);
-                result.splice(i+j,0,{
-                    text: tempArr[j],
-                    newLine: j == (tempArr.length - 1)? true : false
-                });
-                i++;
-            }
-        //     if(wordList.length) {
-        //         let nextWords = wordList[0];
-        //         for (let j = 1; j< wordList.length; j++) {
-        //             if(wordList[i]=='') {
-
-        //             } else if (j == 10) {
-        //                 text[i] = nextWords
-        //             } else if(j%10 == 0) {
-
-        //             }
-        //         }
-        //     }
-        }
-        console.log(result);
-        this.setState({text: result});
-    },
-
-    render() {
-        return (
-            <div style={{width:'100%',wordWrap: 'break-word'}}>
-            {this.state.text.map(function(station, i){
-                if(station.text == '' && (i<5 || this.state.isMore))
-                return <div style={{height:10}} className="" key={i}>{station.text.replace(/ /g, "\u00a0")}</div>;
-                else if (i<5 || this.state.isMore)
-                return station.newLine? <span key={i}><Linkify>{station.text}</Linkify><div></div></span> : <Linkify key={i}>{station.text}</Linkify>;
-                else if(i == 5)
-                return <span key={i} className='cursor-pointer edittabs-indiv-tabs' onClick={()=>{this.setState({isMore: true})}}>...Read More</span>
-                else
-                return
-            }.bind(this))}
-             {this.state.isMore?
-                <div className='cursor-pointer edittabs-indiv-tabs' onClick={()=>{this.setState({isMore: false})}}>...Show less</div>
-                :
-                null
-            } 
-            </div>
-        );
+      }
+      b.splice(d, 1, f[0]),
+        c.splice(d, 1, { text: f[0], newLine: !(1 != f.length) });
+      for (var k = 1; k < f.length; k++)
+        b.splice(d + k, 0, f[k]),
+          c.splice(d + k, 0, { text: f[k], newLine: k == f.length - 1 }),
+          d++;
     }
+    console.log(c), this.setState({ text: c });
+  },
+  render: function render() {
+    var a = this;
+    return _react2.default.createElement(
+      "div",
+      { style: { width: "100%", wordWrap: "break-word" } },
+      this.state.text.map(
+        function(b, c) {
+          var d = this;
+          return "" == b.text && (5 > c || this.state.isMore)
+            ? _react2.default.createElement(
+                "div",
+                { style: { height: 10 }, className: "", key: c },
+                b.text.replace(/ /g, "\xA0")
+              )
+            : 5 > c || this.state.isMore
+              ? b.newLine
+                ? _react2.default.createElement(
+                    "span",
+                    { key: c },
+                    _react2.default.createElement(
+                      _reactLinkify2.default,
+                      null,
+                      b.text
+                    ),
+                    _react2.default.createElement("div", null)
+                  )
+                : _react2.default.createElement(
+                    _reactLinkify2.default,
+                    { key: c },
+                    b.text
+                  )
+              : 5 == c
+                ? _react2.default.createElement(
+                    "span",
+                    {
+                      key: c,
+                      className: "cursor-pointer edittabs-indiv-tabs",
+                      onClick: function onClick() {
+                        d.setState({ isMore: !0 });
+                      }
+                    },
+                    "...Read More"
+                  )
+                : void 0;
+        }.bind(this)
+      ),
+      this.state.isMore
+        ? _react2.default.createElement(
+            "div",
+            {
+              className: "cursor-pointer edittabs-indiv-tabs",
+              onClick: function onClick() {
+                a.setState({ isMore: !1 });
+              }
+            },
+            "...Show less"
+          )
+        : null
+    );
+  }
 });
-
-export default StringParser;
+exports.default = StringParser;
