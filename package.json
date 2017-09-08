@@ -1,6 +1,6 @@
 {
   "name": "react-simple-read-more",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "simple readmore library which allows you to hide your long description with read more and read less button",
   "main": "src/string-parser.js",
   "scripts": {
@@ -19,7 +19,7 @@
   ],
   "author": "Yash Dave (yashndave@gmail.com)",
   "license": "ISC",
-  "dependencies": {
+  "peerDependencies": {
     "react": "^15.5.4",
     "react-linkify": "^0.2.1"
   },
