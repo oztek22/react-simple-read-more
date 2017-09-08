@@ -51,13 +51,13 @@ var StringParser = _react2.default.createClass({
       this.state.text.map(
         function(b, c) {
           var d = this;
-          return "" == b.text && (5 > c || this.state.isMore)
+          return "" == b.text && (c < this.props.breakOn || this.state.isMore)
             ? _react2.default.createElement(
                 "div",
                 { style: { height: 10 }, className: "", key: c },
                 b.text.replace(/ /g, "\xA0")
               )
-            : 5 > c || this.state.isMore
+            : c < this.props.breakOn || this.state.isMore
               ? b.newLine
                 ? _react2.default.createElement(
                     "span",
@@ -74,7 +74,7 @@ var StringParser = _react2.default.createClass({
                     { key: c },
                     b.text
                   )
-              : 5 == c
+              : c == this.props.breakOn
                 ? _react2.default.createElement(
                     "span",
                     {
