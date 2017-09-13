@@ -64,14 +64,14 @@ var StringParser = _react2.default.createClass({
                     { key: c },
                     _react2.default.createElement(
                       _reactLinkify2.default,
-                      null,
+                      { properties: { target: "_blank" } },
                       b.text
                     ),
                     _react2.default.createElement("div", null)
                   )
                 : _react2.default.createElement(
                     _reactLinkify2.default,
-                    { key: c },
+                    { properties: { target: "_blank" }, key: c },
                     b.text
                   )
               : c == this.props.breakOn

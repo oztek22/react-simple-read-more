@@ -78,7 +78,7 @@ const StringParser = React.createClass({
                 if(station.text == '' && (i<this.props.breakOn || this.state.isMore))
                 return <div style={{height:10}} className="" key={i}>{station.text.replace(/ /g, "\u00a0")}</div>;
                 else if (i<this.props.breakOn || this.state.isMore)
-                return station.newLine? <span key={i}><Linkify>{station.text}</Linkify><div></div></span> : <Linkify key={i}>{station.text}</Linkify>;
+                return station.newLine? <span key={i}><Linkify properties={{target: '_blank'}}>{station.text}</Linkify><div></div></span> : <Linkify  properties={{target: '_blank'}} key={i}>{station.text}</Linkify>;
                 else if(i == this.props.breakOn)
                 return <span key={i} className='cursor-pointer edittabs-indiv-tabs' onClick={()=>{this.setState({isMore: true})}}>...Read More</span>
                 else
