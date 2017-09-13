@@ -1,6 +1,6 @@
 {
   "name": "react-simple-read-more",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "simple readmore library which allows you to hide your long description with read more and read less button",
   "main": "src/string-parser.js",
   "scripts": {

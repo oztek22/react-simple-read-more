@@ -16,7 +16,7 @@ var StringParser = _react2.default.createClass({
     this.createTextArr(this.props);
   },
   componentWillReceiveProps: function componentWillReceiveProps(a) {
-    a.text != this.props.text && (this.createTextArr(a), console.log("hahaha"));
+    a.text != this.props.text && this.createTextArr(a);
   },
   createTextArr: function createTextArr(a) {
     var b = [],
@@ -41,7 +41,7 @@ var StringParser = _react2.default.createClass({
           c.splice(d + k, 0, { text: f[k], newLine: k == f.length - 1 }),
           d++;
     }
-    console.log(c), this.setState({ text: c });
+    this.setState({ text: c });
   },
   render: function render() {
     var a = this;
@@ -64,14 +64,18 @@ var StringParser = _react2.default.createClass({
                     { key: c },
                     _react2.default.createElement(
                       _reactLinkify2.default,
-                      { properties: { target: "_blank" } },
+                      { properties: { target: "_blank" }, target: "_blank" },
                       b.text
                     ),
                     _react2.default.createElement("div", null)
                   )
                 : _react2.default.createElement(
                     _reactLinkify2.default,
-                    { properties: { target: "_blank" }, key: c },
+                    {
+                      properties: { target: "_blank" },
+                      target: "_blank",
+                      key: c
+                    },
                     b.text
                   )
               : c == this.props.breakOn
