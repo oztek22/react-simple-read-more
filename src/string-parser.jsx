@@ -25,7 +25,6 @@ const StringParser = React.createClass({
         let text = [];
         let result = [];
         if(nextProp.text) text = nextProp.text.split("\n");
-        console.log(this.props.charLimit);
         for (let i=0; i< text.length; i++) {
             result.push({
                 text: text[i],
@@ -36,13 +35,10 @@ const StringParser = React.createClass({
             let tempArr = [];
             let cmptext = '';
             tempArr.push(tempText);
-            console.log('for loop 1');
             while(tempText.length > this.props.charLimit && (!tempArr.length || tempArr[0] != cmptext)) {
-                console.log('while loop 1');
                 cmptext = tempArr[0];
                 tempText = tempArr[0].substr(0,tempArr[0].length/2);
                 for (let j = 0; j<tempArr.length; j=j+2) {
-                    console.log('for loop 2');
                     let splitIndex = tempArr[j].length/2;
                     while(tempArr[j].charAt(splitIndex) != ' ' && splitIndex < tempArr[j].length) {
                         splitIndex++;
@@ -57,7 +53,6 @@ const StringParser = React.createClass({
                 newLine: tempArr.length == 1? true : false
             });
             for (let j = 1; j<tempArr.length; j++) {
-                console.log('for loop 3');
                 text.splice(i+j, 0, tempArr[j]);
                 result.splice(i+j,0,{
                     text: tempArr[j],
