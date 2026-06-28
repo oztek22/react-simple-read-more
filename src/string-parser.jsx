@@ -1,102 +1,37 @@
-import React, {Component} from 'react';
-import Linkify from 'react-linkify';
+import React, { useState, useEffect } from 'react';
+import Linkify from 'linkify-react';
+import { createTextArr } from './createTextArr.js';
 
-const StringParser = React.createClass({
-    getInitialState: function() {
-        return {
-        isMore: false,
-        text: []
-        }
-    },
-    getDefaultProps: function() {
-        return {
-            charLimit: 200
-        }
-    },
-    componentDidMount: function(){
-        this.createTextArr(this.props);
-    },
-    componentWillReceiveProps: function(nextProp) {
-        if(nextProp.text != this.props.text) {
-            this.createTextArr(nextProp);
-        }
-    },
-    createTextArr: function(nextProp) {
-        let text = [];
-        let result = [];
-        if(nextProp.text) text = nextProp.text.split("\n");
-        for (let i=0; i< text.length; i++) {
-            result.push({
-                text: text[i],
-                newLine: true
-            });
-            // let wordList = text[i].split(' ');
-            let tempText = text[i];
-            let tempArr = [];
-            let cmptext = '';
-            tempArr.push(tempText);
-            while(tempText.length > this.props.charLimit && (!tempArr.length || tempArr[0] != cmptext)) {
-                cmptext = tempArr[0];
-                tempText = tempArr[0].substr(0,tempArr[0].length/2);
-                for (let j = 0; j<tempArr.length; j=j+2) {
-                    let splitIndex = tempArr[j].length/2;
-                    while(tempArr[j].charAt(splitIndex) != ' ' && splitIndex < tempArr[j].length) {
-                        splitIndex++;
-                    }
-                    tempArr.splice(j+1,0,tempArr[j].substr(splitIndex));
-                    tempArr.splice(j,1,tempArr[j].substr(0,splitIndex));
-                }
-            }
-            text.splice(i, 1, tempArr[0]);
-            result.splice(i,1,{
-                text: tempArr[0],
-                newLine: tempArr.length == 1? true : false
-            });
-            for (let j = 1; j<tempArr.length; j++) {
-                text.splice(i+j, 0, tempArr[j]);
-                result.splice(i+j,0,{
-                    text: tempArr[j],
-                    newLine: j == (tempArr.length - 1)? true : false
-                });
-                i++;
-            }
-        //     if(wordList.length) {
-        //         let nextWords = wordList[0];
-        //         for (let j = 1; j< wordList.length; j++) {
-        //             if(wordList[i]=='') {
+export { createTextArr };
 
-        //             } else if (j == 10) {
-        //                 text[i] = nextWords
-        //             } else if(j%10 == 0) {
+function StringParser({ text: inputText, charLimit = 200, breakOn = Infinity }) {
+    const [isMore, setIsMore] = useState(false);
+    const [text, setText] = useState([]);
 
-        //             }
-        //         }
-        //     }
-        }
-        this.setState({text: result});
-    },
+    useEffect(() => {
+        setText(createTextArr(inputText, charLimit));
+    }, [inputText, charLimit]);
 
-    render() {
-        return (
-            <div style={{width:'100%',wordWrap: 'break-word'}}>
-            {this.state.text.map(function(station, i){
-                if(station.text == '' && (i<this.props.breakOn || this.state.isMore))
-                return <div style={{height:10}} className="" key={i}>{station.text.replace(/ /g, "\u00a0")}</div>;
-                else if (i<this.props.breakOn || this.state.isMore)
-                return station.newLine? <span key={i}><Linkify properties={{target: '_blank'}}  target="_blank">{station.text}</Linkify><div></div></span> : <Linkify  properties={{target: '_blank'}}  target="_blank" key={i}>{station.text}</Linkify>;
-                else if(i == this.props.breakOn)
-                return <span key={i} className='cursor-pointer edittabs-indiv-tabs' onClick={()=>{this.setState({isMore: true})}}>...Read More</span>
+    return (
+        <div style={{ width: '100%', wordWrap: 'break-word' }}>
+            {text.map((station, i) => {
+                if (station.text === '' && (i < breakOn || isMore))
+                    return <div style={{ height: 10 }} className="" key={i}>{station.text.replace(/ /g, "\u00a0")}</div>;
+                else if (i < breakOn || isMore)
+                    return station.newLine
+                        ? <span key={i}><Linkify options={{ target: '_blank' }}>{station.text}</Linkify><div></div></span>
+                        : <Linkify options={{ target: '_blank' }} key={i}>{station.text}</Linkify>;
+                else if (i === breakOn)
+                    return <span key={i} className='cursor-pointer edittabs-indiv-tabs' onClick={() => setIsMore(true)}>...Read More</span>;
                 else
-                return
-            }.bind(this))}
-             {this.state.isMore?
-                <div className='cursor-pointer edittabs-indiv-tabs' onClick={()=>{this.setState({isMore: false})}}>...Show less</div>
-                :
-                null
-            } 
-            </div>
-        );
-    }
-});
+                    return null;
+            })}
+            {isMore
+                ? <div className='cursor-pointer edittabs-indiv-tabs' onClick={() => setIsMore(false)}>...Show less</div>
+                : null
+            }
+        </div>
+    );
+}
 
 export default StringParser;
