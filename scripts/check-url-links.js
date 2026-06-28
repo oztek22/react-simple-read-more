@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
 const net = require('net');
+const path = require('path');
 
 async function waitForPort(port, maxMs = 60000) {
   const deadline = Date.now() + maxMs;
@@ -19,7 +20,9 @@ async function waitForPort(port, maxMs = 60000) {
 }
 
 async function main() {
+  const projectRoot = path.resolve(__dirname, '..');
   const server = spawn('npm', ['run', 'examples'], {
+    cwd: projectRoot,
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 
@@ -38,8 +41,19 @@ async function main() {
     const page = await browser.newPage();
 
     await page.goto('http://localhost:1234', { waitUntil: 'load', timeout: 30000 });
-    // Wait for React to finish rendering
-    await page.waitForSelector('section', { timeout: 15000 });
+
+    // Wait until StringParser's useEffect has run and linkify-react has rendered
+    // the linkified anchors inside the URL Linkification section.
+    // The section already has one <a> (the linkify-react homepage link in the description),
+    // so waiting for >1 anchor confirms the SAMPLE_TEXT URLs have been linkified.
+    await page.waitForFunction(() => {
+      const sections = Array.from(document.querySelectorAll('section'));
+      const urlSection = sections.find(s => {
+        const h2 = s.querySelector('h2');
+        return h2 && h2.textContent.trim() === 'URL Linkification';
+      });
+      return urlSection && urlSection.querySelectorAll('a').length > 1;
+    }, { timeout: 15000 });
 
     const allAnchors = await page.evaluate(() => {
       const sections = Array.from(document.querySelectorAll('section'));
