@@ -59,6 +59,9 @@
     "rollup": "^4.0.0",
     "rollup-plugin-peer-deps-external": "^2.2.4"
   },
+  "overrides": {
+    "js-yaml": "^4.3.0"
+  },
   "bugs": {
     "url": "https://github.com/oztek22/react-simple-read-more/issues"
   },
